@@ -114,6 +114,7 @@ int main(int argc, char **argv)
     struct stat sbuf;
     stat(argv[1], &sbuf);
     if (S_ISDIR(sbuf.st_mode)) {
+        fclose(fp);
         printf("rubi: Is a directory -- %s (LoadError)\n", argv[1]);
         exit(0);
     }

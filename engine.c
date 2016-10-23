@@ -6,6 +6,8 @@
 #include <Windows.h>
 #else
 #include <sys/mman.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 #endif
 
 #include <stdlib.h>
@@ -106,6 +108,17 @@ int main(int argc, char **argv)
         perror("file not found");
         exit(0);
     }
+
+    /* Check if argv[1] is a directory */
+#ifndef _WIN32
+    struct stat sbuf;
+    stat(argv[1], &sbuf);
+    if (S_ISDIR(sbuf.st_mode)) {
+        printf("rubi: Is a directory -- %s (LoadError)\n", argv[1]);
+        exit(0);
+    }
+#endif
+
     fseek(fp, 0, SEEK_END);
     ssz = ftell(fp);
     fseek(fp, 0, SEEK_SET);
